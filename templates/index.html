@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask app</title>
+    <style>
+        /* ベース設定 */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            overflow-x: hidden;
+            height: 100vh;
+            position: relative;
+        }
+        header {
+            background: #121212;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInHeader 1s ease-out forwards;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: #00d4ff;
+        }
+        header p {
+            margin: 5px 0;
+            font-size: 1rem;
+            color: #ccc;
+        }
+        nav {
+            text-align: center;
+            background: #1c1c1c;
+            padding: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        nav a {
+            color: #00d4ff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #fff;
+        }
+
+        /* プログラムコードの背景アニメーション */
+        .code-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #00ff84;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            overflow: hidden;
+            z-index: -1;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        
+        .code-line {
+            white-space: nowrap;
+            opacity: 0.7;
+            animation: scrollCode 15s linear infinite;
+            margin-bottom: 5px;
+        }
+
+        /* プログラムコードのスクロールアニメーション */
+        @keyframes scrollCode {
+            0% {
+                transform: translateY(100%);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100%);
+                opacity: 0.7;
+            }
+        }
+
+        .hero {
+            position: relative;
+            text-align: center;
+            padding: 100px 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            animation: fadeInHero 1.5s ease-out forwards;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: fadeInText 2s ease-in-out forwards;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            animation: fadeInText 2.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeInHeader {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInHero {
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes fadeInText {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .small-image {
+            width: 500px; /* 幅を100pxに設定 */
+            height: auto; /* 高さを自動調整 */
+        }
+
+        .content {
+            padding: 50px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            animation: fadeInContent 1.5s ease-in-out forwards;
+        }
+        @keyframes fadeInContent {
+            to {
+                opacity: 1;
+            }
+        }
+        .content h2 {
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #00d4ff;
+        }
+        .code-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .code-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeInCodeBox 1.5s ease-in-out forwards;
+        }
+        .code-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes fadeInCodeBox {
+            to {
+                opacity: 1;
+            }
+        }
+        .code-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #00d4ff;
+        }
+        .code-box pre {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            color: #00ff84;
+            font-size: 0.9rem;
+        }
+        footer {
+            background: #121212;
+            color: #aaa;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            opacity: 0;
+            animation: fadeInFooter 1s ease-out forwards;
+        }
+        footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: #fff;
+        }
+        @keyframes fadeInFooter {
+            to {
+                opacity: 1;
+            }
+        }
+        /* ログインボタンのスタイル */
+        .login-button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeInLoginButton 1s ease-out forwards;
+        }
+        @keyframes fadeInLoginButton {
+            to {
+                opacity: 1;
+            }
+        }
+        .login-button {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            background-color: #00d4ff;
+            color: #121212;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .login-button:hover {
+            background-color: #00b0d7;
+            transform: translateY(-5px);
+        }
+        .login-button:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="code-background">
+        <!-- 既存のコード... -->
+    </div>
+    <header>
+        <h1>CodeLexicon</h1>
+        <p>プログラムコード辞典</p>
+    </header>
+    <nav>
+        <a href="#about">概要</a>
+        <a href="#codes">コード例</a>
+        <a href="/toi">問題にチャレンジ</a>
+        <a href="/login">初めての方へ</a>
+        <a href="#contact">お問い合わせ</a>
+    </nav>
+    <section class="hero">
+        <h1>プログラムコードを楽しく学ぼう！</h1>
+        <p>初心者から上級者まで、すべての人へ。</p>
+        <img src="img/it2.jpg" alt="earch" class="small-image">
+    </section>
+    <section id="about" class="content">
+        <h2>CodeLexiconとは？</h2>
+        <p>CodeLexiconは、さまざまなプログラミング言語のサンプルコードを簡単に学べるモダンな辞典です。</p>
+    </section>
+    <section id="codes" class="content">
+        <h2>コード例</h2>
+        <div class="code-section">
+            <div class="code-box">
+                <h3>Python: Hello World</h3>
+                <pre>print("Hello, World!")</pre>
+            </div>
+            <div class="code-box">
+                <h3>JavaScript: 配列の合計</h3>
+                <pre>
+const numbers = [1, 2, 3, 4];
+const sum = numbers.reduce((a, b) => a + b, 0);
+console.log(sum);
+                </pre>
+            </div>
+        </div>
+    </section>
+    <!-- ログインフォーム -->
+    <section class="login-button-container">
+        <h2>ログイン</h2>
+        <form id="login-form" method="get" action="/login">
+           <button class="login-button" type="submit">ログイン</button>
+        </form>
+        <form id="login-form" method="get" action="/sign-up">
+            <button class="login-button" type="submit">新規</button>
+         </form>
+    </section>
+
+    <footer id="contact">
+        <p>お問い合わせ: <a href="mailto:support@codelexicon.com">support@codelexicon.com</a></p>
+        <p>&copy; 2024 CodeLexicon. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

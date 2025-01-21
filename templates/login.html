@@ -1,0 +1,142 @@
+<html lang="en">
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    body {
+      font-family: "Arial", sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+  }
+  header {
+      background: #0078d7;
+      color: white;
+      text-align: center;
+      padding: 20px 10px;
+  }
+  header h1 {
+      margin: 0;
+      font-size: 24px;
+  }
+  header p {
+      font-size: 14px;
+  }
+  nav {
+      background: #004a9f;
+      color: white;
+      padding: 10px 15px;
+      text-align: center;
+  }
+  nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 14px;
+  }
+  nav a:hover {
+      text-decoration: underline;
+  }
+  main {
+      padding: 20px;
+  }
+  section {
+      margin-bottom: 30px;
+  }
+  h2 {
+      color: #0078d7;
+      border-bottom: 2px solid #0078d7;
+      padding-bottom: 5px;
+  }
+  p, ul, ol {
+      margin: 10px 0;
+  }
+  ul, ol {
+      padding-left: 20px;
+  }
+  footer {
+      background: #004a9f;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+  }
+  footer p {
+      margin: 5px 0;
+  }
+</style>
+</head>
+<body>
+    <h1>初めての方へ</h1>
+    <header>
+      <h1>プログラムコード問題集</h1>
+      <p>プログラミングの知識を効率よく学べるオンライン問題種</p>
+      </header>
+      <nav>
+      <a href="#overview">サイト概要</a>
+      <a href="#features">主な機能</a>
+      <a href="#usage">使い方</a>
+      <a href="#notes">注意事項</a>
+      <a href="#contact">お問い合わせ</a>
+      </nav>
+      <main>
+      <section id="overview">
+      <h2>1. サイト概要</h2>
+      <p>
+                 プログラムコード問題集は、プログラミングの基本的なコード例や概念を効率よく学ぶことができるプログラムコード問題集サイトです。
+                 初心者から上級者まで、さまざまなレベルの学習者に役立つ情報を提供しています。
+      </p>
+      </section>
+      <section id="features">
+      <h2>2. 主な機能</h2>
+      <ul>
+      <li>プログラミング言語ごとに整理されたコード例</li>
+      <li>詳細な説明と実践的な使用例</li>
+      <li>検索機能で素早く目的の情報を見つけられる</li>
+      <li>お気に入り登録機能</li>
+      </ul>
+      </section>
+      <section id="usage">
+      <h2>3. 使い方</h2>
+      <ol>
+      <li>トップページから学びたいプログラミング言語を選択</li>
+      <li>コード例や関連する記事を閲覧</li>
+      <li>検索バーで特定のトピックを検索</li>
+      <li>アカウントにログインしてお気に入りを保存（オプション）</li>
+      </ol>
+      </section>
+      <section id="notes">
+      <h2>4. 注意事項</h2>
+      <p>
+                 本サイトに掲載されているコード例は、参考用です。コードを実行する際は、必ずご自身の環境で動作確認を行ってください。
+                 また、著作権に関連する問題がないか注意してください。
+      </p>
+      </section>
+      <section id="contact">
+      <h2>5. お問い合わせ</h2>
+      <p>ご質問やご意見がありましたら、以下のメールアドレスにご連絡ください。</p>
+      <p><a href="mailto:support@code-dictionary.jp">support@code-dictionary.jp</a></p>
+      </section>
+      <section id="login">
+        <p>{{msg}}</p>
+        <form action="/sign-in" method="post">
+            <label for="name">ユーザー名：</label>
+            <input type="text" name="name"><br>
+            <label for="password">パスワード：</label>
+            <input type="password" name="password"><br>
+            <input type="submit" value="ログイン">
+        </form>
+      </section>
+      </main>
+      <footer>
+      <p>&copy; 2024 プログラムコード問題集. All rights reserved.</p>
+      <p><a href="https://code-dictionary.jp">公式サイトはこちら</a></p>
+      </footer>
+
+</body>

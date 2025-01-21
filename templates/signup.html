@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登録ページ</title>
+</head>
+<body>
+    <p>{{msg}}</p>
+    <form action="/create-user" method="post">
+        <label for="name">ユーザー名：</label>
+        <input type="text" name="name"><br>
+        <label for="email">メールアドレス：</label>
+        <input type="text" name="email"><br>
+        <label for="password">パスワード：</label>
+        <input type="password" name="password"><br>
+        <input type="submit" value="登録">
+    </form>
+</body>
+</html>

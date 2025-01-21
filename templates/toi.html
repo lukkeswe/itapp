@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>選択ページ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">基本情報者試験過去問</div>
+        <div class="header-right">
+            <span class="icon"></span>
+            <span class="username">
+                {% if data['username'] %}
+                {{data['username']}}
+                {% else %}
+                User
+                {% endif %}
+            </span>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <button><li>正解した問題一覧</li></button>
+            <button><li>不正解一覧</li></button>
+            <button><li><a href="/">公式サイトはこちら</a></li></button>
+            <form action="/login" method="post"><button type="submit"><li>初めての方へ</li></button></form>
+        </ul>
+    </nav>
+    
+    <main>
+        <div class="selection-container">
+            <h2>選択</h2>
+            <form action="/by-year" method="post">
+                <div class="radio-group">
+                    <label><input type="radio" name="year" value="4"> 令和4年度</label>
+                    <label><input type="radio" name="year" value="3"> 令和3年度</label>
+                    <label><input type="radio" name="year" value="2"> 令和2年度</label>
+                    <label><input type="radio" name="year" value="1"> 令和1年度</label>
+                    <label><input type="radio" name="year" value="31"> 平成31年度</label>
+                    <label><input type="radio" name="year" value="30"> 平成30年度</label>
+                    <label><input type="radio" name="year" value="29"> 平成29年度</label>
+                    <label><input type="radio" name="year" value="28"> 平成28年度</label>
+                </div>
+                <button type="submit">出題</button>
+            </form>
+        </div>
+    </main>
+    <div style="color: #000; width: 500px; margin: 0 auto;">
+        <!-- <form action="/random"><button type="submit">try</button></form> -->
+        {% if data['question'] %}
+        <p>{{msg}}</p>
+        <form action="/answer" method="post">
+            <p>{{data['question']}}</p>
+            <input type="submit" name="answer" value="ア"><br>
+            <p>{{data['a']}}</p>
+            <input type="submit" name="answer" value="イ"><br>
+            <p>{{data['i']}}</p>
+            <input type="submit" name="answer" value="ウ"><br>
+            <p>{{data['u']}}</p>
+            <input type="submit" name="answer" value="エ"><br>
+            <p>{{data['e']}}</p>
+        </form>
+        {% endif %}
+    </div>
+</body>
+</html>
