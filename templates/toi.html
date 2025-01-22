@@ -14,6 +14,10 @@
             <span class="username">
                 {% if data['username'] %}
                 {{data['username']}}
+                 HS: 
+                {{data['highscore']}}
+                 XP: 
+                {{data['xp']}}
                 {% else %}
                 User
                 {% endif %}
@@ -51,7 +55,7 @@
     <div style="color: #000; width: 500px; margin: 0 auto;">
         <!-- <form action="/random"><button type="submit">try</button></form> -->
         {% if data['question'] %}
-        <p>{{msg}}</p>
+        <p>{{data['msg']}}</p>
         <form action="/answer" method="post">
             <p>{{data['question']}}</p>
             <input type="submit" name="answer" value="ア"><br>

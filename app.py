@@ -159,11 +159,17 @@ def toi():
         
     if session.get('msg') is None:
         session['msg'] = ""
-        data['msg'] = ""
+    data['msg'] = session['msg']
     return render_template("toi.html", data=data)
 
 @app.route('/answer', methods=["POST"])
 def answer():
+    db_config = {
+        'host'      : 'localhost',
+        'user'      : 'root',
+        'password'  : 'tvtittaren',
+        'database'  : 'itapp'
+    }
     answer = request.form['answer']
     if answer == session['answer']:
         session['msg'] = "正解！"
@@ -173,9 +179,30 @@ def answer():
             session['xp'] += session['highscore']
         session['highscore'] += 1
         print("正解！")
+        try:
+            conn = mysql.connector.connect(**db_config)
+            cursor = conn.cursor()
+            sql = "UPDATE experience SET xp = %s, highscore = %s WHERE username = %s"
+            cursor.execute(sql, (int(session['xp']), int(session['highscore']), session['username']))
+            conn.commit()
+            conn.close()
+        except mysql.connector.Error as err:
+            session['msg'] = err
+            return redirect(url_for('toi'))
         return redirect(url_for('toi'))
     session['msg'] = "残念..."
+    session['highscore'] = 0
     print("残念...")
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        sql = "UPDATE experience SET highscore = 0 WHERE username = %s"
+        cursor.execute(sql, (session['username'], ))
+        conn.commit()
+        conn.close()
+    except mysql.connector.Error as err:
+        session['msg'] = err
+        return redirect(url_for('toi'))
     return redirect(url_for('toi'))
 
 @app.route('/sign-up')
