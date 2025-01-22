@@ -224,14 +224,14 @@ def create_user():
     newPassword = request.form['password']
     
     # 入力を確認する
-    if len(newUserName) > 20:
-        session['signMsg'] = "入力されたユーザー名は長すぎる"
+    if len(newUserName) > 20 or len(newUserName) < 4:
+        session['signMsg'] = "ユーザー名の入力エラー"
         return redirect(url_for('sign_up'))
     if len(newPassword) < 6:
         session['signMsg'] = "入力されたパスワードは短いです"
         return redirect(url_for('sign_up'))
-    if len(newEmail) > 100:
-        session['signMsg'] = "入力されたメールアドレスは長すぎる"
+    if len(newEmail) > 100 or len(newEmail) < 10:
+        session['signMsg'] = "メールアドレスの入力エラー"
         return redirect(url_for('sign_up'))
     try:
         conn = mysql.connector.connect(
