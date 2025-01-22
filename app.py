@@ -112,7 +112,10 @@ def random():
 def by_year():
     year = request.form['year']
     if int(year) < 21:
-        qYear = "0" + str(year) + "_menjo"
+        if int(year) == 1:
+            qYear = "01_aki"
+        else:
+            qYear = "0" + str(year) + "_menjo"
         data = sq.select(qYear, "random")
     else:
         qYear1 = str(year) + "_aki"
