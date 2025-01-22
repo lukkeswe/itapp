@@ -167,6 +167,11 @@ def answer():
     answer = request.form['answer']
     if answer == session['answer']:
         session['msg'] = "正解！"
+        if session['highscore'] == 0:
+            session['xp'] += 1
+        else:
+            session['xp'] += session['highscore']
+        session['highscore'] += 1
         print("正解！")
         return redirect(url_for('toi'))
     session['msg'] = "残念..."
