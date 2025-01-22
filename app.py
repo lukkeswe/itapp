@@ -176,17 +176,21 @@ def answer():
     answer = request.form['answer']
     if answer == session['answer']:
         session['msg'] = "正解！"
-        if session['highscore'] == 0:
+        if session['qcount'] == 0:
             session['xp'] += 1
         else:
-            session['xp'] += session['highscore']
-        session['highscore'] += 1
+            session['xp'] += session['qcount']
+        session['qcount'] += 1
         print("正解！")
         try:
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor()
-            sql = "UPDATE experience SET xp = %s, highscore = %s WHERE username = %s"
-            cursor.execute(sql, (int(session['xp']), int(session['highscore']), session['username']))
+            if int(session['qcount']) >= int(session['highscore']):
+                sql = "UPDATE experience SET xp = %s, qcount = %s, highscore = %s WHERE username = %s"
+                cursor.execute(sql, (int(session['xp']), int(session['qcount']), int(session['qcount']), session['username']))
+            else:
+                sql = "UPDATE experience SET xp = %s, qcount = %s WHERE username = %s"
+                cursor.execute(sql, (int(session['xp']), int(session['qcount']), session['username']))
             conn.commit()
             conn.close()
         except mysql.connector.Error as err:
@@ -199,7 +203,7 @@ def answer():
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        sql = "UPDATE experience SET highscore = 0 WHERE username = %s"
+        sql = "UPDATE experience SET qcount = 0 WHERE username = %s"
         cursor.execute(sql, (session['username'], ))
         conn.commit()
         conn.close()
