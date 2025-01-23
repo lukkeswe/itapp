@@ -10,7 +10,8 @@
     <header>
         <div class="header-left">基本情報者試験過去問</div>
         <div class="header-right">
-            <span class="icon"></span>
+            <button class="icon" onclick="colorPallete()"></button>
+            <div id="paletteContainer"></div>
             <span class="username">
                 {% if data['username'] %}
                 {{data['username']}}
@@ -70,4 +71,38 @@
         {% endif %}
     </div>
 </body>
+<script>
+const colors = [
+["black", "white", "red", "green", "yellow"],
+["brown", "pink", "orange", "purple", "silver"]
+];
+function colorPallete(){
+    const element = document.getElementById("paletteContainer");
+    let palette = document.createElement("div");
+    palette.id = "palette";
+    palette.style.zIndex = 2;
+    palette.style.position = "absolute";
+    for(let row = 0; row < colors.length; row++){
+        let paletteRow = document.createElement("div");
+        paletteRow.id = "row" + row;
+        for(let color = 0; color < colors[row].length; color++){
+            let newColor = document.createElement("button");
+            newColor.style.backgroundColor = colors[row][color];
+            newColor.id = colors[row][color];
+            newColor.onclick = function(){
+                const icons = document.querySelectorAll(".icon");
+                icons.forEach(icon => {
+                    icon.style.backgroundColor = colors[row][color];
+                });
+                palette.remove();
+            }
+            newColor.style.padding = "10px";
+            paletteRow.appendChild(newColor);
+        }
+        paletteRow.style.display = "flex";
+        palette.appendChild(paletteRow);
+    }
+    element.appendChild(palette);
+}
+</script>
 </html>
