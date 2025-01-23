@@ -3,18 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登録ページ</title>
+    <title>IT APP | 登録ページ</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <p>{{msg}}</p>
+    <p class="Form-Item-Label">{{msg}}</p>
     <form action="/create-user" method="post">
-        <label for="name">ユーザー名：</label>
-        <input type="text" name="name"><br>
-        <label for="email">メールアドレス：</label>
-        <input type="text" name="email"><br>
-        <label for="password">パスワード：</label>
-        <input type="password" name="password"><br>
-        <input type="submit" value="登録">
+        <div class="Form">
+            <div class="Form-Item">
+              <p class="Form-Item-Label"><span class="Form-Item-Label-Required">必須</span>氏名</p>
+              <input type="text" class="Form-Item-Input" name="name" placeholder="例）山田太郎">
+            </div>
+            <div class="Form-Item">
+              <p class="Form-Item-Label"><span class="Form-Item-Label-Required">必須</span>メールアドレス</p>
+              <input type="email" class="Form-Item-Input" name="email" placeholder="例）example@gmail.com">
+            </div>
+            <div class="Form-Item">
+              <p class="Form-Item-Label"><span class="Form-Item-Label-Required">必須</span>パスワード</p>
+              <input class="Form-Item-Input" name="password"></textarea>
+            </div>
+            <input type="submit" class="Form-Btn" value="登録する">
+        </div>
     </form>
 </body>
 </html>

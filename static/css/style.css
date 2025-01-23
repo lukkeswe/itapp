@@ -96,6 +96,7 @@ button:hover {
 .icon {
     width: 20px;
     height: 20px;
+    padding: 0;
     background-color: #ccc;
     border-radius: 50%;
     margin-right: 10px;
