@@ -127,7 +127,7 @@ def getImage(year, question):
     return False
 
 def getNumber(question_id):
-    last_two = question_id[-2:]
+    last_two = str(question_id[-2:])
     cleaned_id = re.sub(r"[^0-9]", "", last_two)
     print("id:", cleaned_id)
     return cleaned_id
@@ -159,8 +159,11 @@ def by_year():
         question_number = "0" + str(question_number)
     
     if getImage(qYear, question_number):
-        data["scr"] = os.path.join(app_root, qYear, question_number + ".png")
-        print("scr:", data["scr"])
+        session["src"] = "img/" + qYear + "/" + question_number + ".png"
+        print("src:", session["src"])
+    else:
+        if session.get('src'):
+            session.pop('src')
         
     session['question'] = data['question']
     session['a'] = data['a']
@@ -191,6 +194,8 @@ def toi():
         data['i'] = session['i']
         data['u'] = session['u']
         data['e'] = session['e']
+        if session.get("src") is not None:
+            data['src'] = session['src']
         
     if session.get('msg') is None:
         session['msg'] = ""

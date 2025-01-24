@@ -58,6 +58,9 @@
         {% if data['question'] %}
         <p>{{data['msg']}}</p>
         <form action="/answer" method="post">
+            {% if data['src'] %}
+            <img src="{{data['src']}}" alt="question image">
+            {% endif %}
             <p>{{data['question']}}</p>
             <input type="submit" name="answer" value="ア"><br>
             <p>{{data['a']}}</p>
