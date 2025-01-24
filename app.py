@@ -4,11 +4,21 @@ import mysql.connector
 import it
 import picdown
 import random as rand
+import os
+import re
 
 app = Flask(__name__,
             static_folder='static',
             static_url_path="")
+
 app.secret_key = 'supersecretkey'
+
+IMAGE_FOLDER = os.path.join("static", "img")
+app.config["IMAGE_FOLDER"] = IMAGE_FOLDER
+
+app_root = os.path.dirname(os.path.abspath(__file__))
+print("path:", app_root)
+
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -108,6 +118,20 @@ def random():
     
     return redirect(url_for('toi'))
 
+def getImage(year, question):
+    filename = str(question) + ".png"
+    relative_path = os.path.join(app.config['IMAGE_FOLDER'], year, filename)
+    absolute_path = os.path.join(app_root, relative_path)
+    if os.path.isfile(absolute_path):
+        return True
+    return False
+
+def getNumber(question_id):
+    last_two = question_id[-2:]
+    cleaned_id = re.sub(r"[^0-9]", "", last_two)
+    print("id:", cleaned_id)
+    return cleaned_id
+
 @app.route('/by-year', methods=['POST'])
 def by_year():
     year = request.form['year']
@@ -121,15 +145,23 @@ def by_year():
         qYear1 = str(year) + "_aki"
         qYear2 = str(year) + "_haru"
         data1 = sq.select(qYear1, "random")
-        #print("Data 1:", data1)
         data2 = sq.select(qYear2, "random")
-        #print("Data 2:", data2)
         coin = rand.randint(0, 1)
-        #print("Coin:", coin)
         if coin == 1:
             data = data1
+            qYear = qYear1
         else:
             data = data2
+            qYear = qYear2
+            
+    question_number = getNumber(data["id"])
+    if int(question_number) < 10:
+        question_number = "0" + str(question_number)
+    
+    if getImage(qYear, question_number):
+        data["scr"] = os.path.join(app_root, qYear, question_number + ".png")
+        print("scr:", data["scr"])
+        
     session['question'] = data['question']
     session['a'] = data['a']
     session['i'] = data['i']

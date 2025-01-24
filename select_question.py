@@ -56,6 +56,7 @@ def select(year, option):
             
             data['question'] = random_question[1]
             data['answer'] = random_question[2]
+            data['id'] = random_question[3]
             
             cursor.execute(f"SELECT * FROM options WHERE question_id = '{random_question[3]}'")
             options = cursor.fetchall()
