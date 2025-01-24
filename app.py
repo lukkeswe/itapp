@@ -171,6 +171,7 @@ def by_year():
     session['u'] = data['u']
     session['e'] = data['e']
     session['answer'] = data['answer']
+    session['questionId'] = data['id']
     print("answer: ", session['answer'])
     
     session['msg'] = ""
@@ -228,10 +229,23 @@ def answer():
             else:
                 sql = "UPDATE experience SET xp = %s, qcount = %s WHERE username = %s"
                 cursor.execute(sql, (int(session['xp']), int(session['qcount']), session['username']))
+            
+            sql = "SELECT * FROM result WHERE username = %s"
+            cursor.execute(sql, (session['username'], ))
+            result = cursor.fetchall()
+            sql = "INSERT INTO result (username, question_id, is_correct) VALUES (%s, %s, 1)"
+            if result:
+                for item in result:
+                    if item[2] == session['questionId']:
+                        sql = "UPDATE result SET is_correct = 1 WHERE username = %s AND question_id = %s"
+                        break
+                    sql = "INSERT INTO result (username, question_id, is_correct) VALUES (%s, %s, 1)"
+            cursor.execute(sql, (session['username'], session['questionId']))
             conn.commit()
+            cursor.close()
             conn.close()
         except mysql.connector.Error as err:
-            session['msg'] = err
+            session['msg'] = str(err)
             return redirect(url_for('toi'))
         return redirect(url_for('toi'))
     session['msg'] = "残念..."
@@ -242,10 +256,23 @@ def answer():
         cursor = conn.cursor()
         sql = "UPDATE experience SET qcount = 0 WHERE username = %s"
         cursor.execute(sql, (session['username'], ))
+        
+        sql = "SELECT * FROM result WHERE username = %s"
+        cursor.execute(sql, (session['username'], ))
+        result = cursor.fetchall()
+        sql = "INSERT INTO result (username, question_id, is_correct) VALUES (%s, %s, 0)"
+        if result:
+            for item in result:
+                if item[2] == session['questionId']:
+                    sql = "UPDATE result SET is_correct = 0 WHERE username = %s AND question_id = %s"
+                    break
+                
+        cursor.execute(sql, (session['username'], session['questionId']))
         conn.commit()
+        cursor.close()
         conn.close()
     except mysql.connector.Error as err:
-        session['msg'] = err
+        session['msg'] = str(err)
         return redirect(url_for('toi'))
     return redirect(url_for('toi'))
 
