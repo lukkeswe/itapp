@@ -20,13 +20,6 @@ app.config["IMAGE_FOLDER"] = IMAGE_FOLDER
 app_root = os.path.dirname(os.path.abspath(__file__))
 print("path:", app_root)
 
-# db_config = {
-#         'host'      : 'localhost',
-#         'user'      : 'root',
-#         'password'  : 'tvtittaren',
-#         'database'  : 'itapp'
-#     }
-
 @app.route('/')
 def index():
     return render_template("index.html")
