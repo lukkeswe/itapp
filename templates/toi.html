@@ -28,8 +28,8 @@
     
     <nav>
         <ul>
-            <button><li>正解した問題一覧</li></button>
-            <button><li>不正解一覧</li></button>
+            <button><li><a href="/get-result?request=correct">正解した問題一覧</a></li></button>
+            <button><li><a href="/get-result?request=incorrect">不正解一覧</a></li></button>
             <button><li><a href="/">公式サイトはこちら</a></li></button>
             <form action="/login" method="post"><button type="submit"><li>初めての方へ</li></button></form>
         </ul>
@@ -55,8 +55,8 @@
     </main>
     <div style="color: #000; width: 500px; margin: 0 auto;">
         <!-- <form action="/random"><button type="submit">try</button></form> -->
+        {% if data['msg'] %}<p>{{data['msg']}}</p>{% endif %}
         {% if data['question'] %}
-        <p>{{data['msg']}}</p>
         <form action="/answer" method="post">
             {% if data['src'] %}
             <img src="{{data['src']}}" alt="question image">
@@ -71,6 +71,23 @@
             <input type="submit" name="answer" value="エ"><br>
             <p>{{data['e']}}</p>
         </form>
+        {% elif data['result'] %}
+        <table>
+        <tr>
+            <td>年度</td>
+            <td>季節</td>
+            <td>番号</td>
+            <td>問題リンク</td>
+        </tr>
+        {% for item in data['result'] %}
+        <tr>
+            <td>{{item.year}}</td>
+            <td>{{item.season}}</td>
+            <td>{{item.number}}</td>
+            <td><a href="/get-question?id={{item.id}}">⇒</a></td>
+        </tr>
+        {% endfor %}
+        </table>
         {% endif %}
     </div>
 </body>

@@ -51,30 +51,51 @@ def select(year, option):
         if len(result) > 0:
             legnth = len(result) - 1
             random_number = random.randint(0, legnth)
-            random_question = result[random_number]
+            question = result[random_number]
             #print(random_question)
             
-            data['question'] = random_question[1]
-            data['answer'] = random_question[2]
-            data['id'] = random_question[3]
+            # data['question'] = random_question[1]
+            # data['answer'] = random_question[2]
+            # data['id'] = random_question[3]
             
-            cursor.execute(f"SELECT * FROM options WHERE question_id = '{random_question[3]}'")
-            options = cursor.fetchall()
+            # cursor.execute(f"SELECT * FROM options WHERE question_id = '{random_question[3]}'")
+            # options = cursor.fetchall()
             
-            aiue = ['a', 'i', 'u', 'e']
-            for i, option in enumerate(options):
-                raw = option[2]
-                for item in rep_list:
-                    if item in raw:
-                        raw = raw.replace(item, "")
-                data[aiue[i]] = raw
+            # aiue = ['a', 'i', 'u', 'e']
+            # for i, option in enumerate(options):
+            #     raw = option[2]
+            #     for item in rep_list:
+            #         if item in raw:
+            #             raw = raw.replace(item, "")
+            #     data[aiue[i]] = raw
         else:
             print("no questions in table")
             return "error"
+    elif option == "specific":
+        query = "SELECT * FROM questions WHERE question_id = %s"
+        cursor.execute(query, (year, ))
+        result = cursor.fetchall()
+        question = result[0]
     else:
         print("no option")
         return "error"
-                
-    return data
+    
+    data['question'] = question[1]
+    data['answer'] = question[2]
+    data['id'] = question[3]
+    
+    cursor.execute(f"SELECT * FROM options WHERE question_id = '{question[3]}'")
+    options = cursor.fetchall()
+    
+    aiue = ['a', 'i', 'u', 'e']
+    for i, option in enumerate(options):
+        raw = option[2]
+        for item in rep_list:
+            if item in raw:
+                raw = raw.replace(item, "")
+        data[aiue[i]] = raw
+    
+    return data          
+    
 
 print(select(None, 'random'))

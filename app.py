@@ -19,6 +19,13 @@ app.config["IMAGE_FOLDER"] = IMAGE_FOLDER
 app_root = os.path.dirname(os.path.abspath(__file__))
 print("path:", app_root)
 
+db_config = {
+        'host'      : 'localhost',
+        'user'      : 'root',
+        'password'  : 'tvtittaren',
+        'database'  : 'itapp'
+    }
+
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -129,7 +136,6 @@ def getImage(year, question):
 def getNumber(question_id):
     last_two = str(question_id[-2:])
     cleaned_id = re.sub(r"[^0-9]", "", last_two)
-    print("id:", cleaned_id)
     return cleaned_id
 
 @app.route('/by-year', methods=['POST'])
@@ -189,7 +195,15 @@ def toi():
         data['qcount'] = session['qcount']
         data['highscore'] = session['highscore']
     
+    if session.get('result') is not None:
+        if session.get('question') is not None:
+            session.pop('question')
+        data['result'] = session['result']
+        print(data['result'])
+    
     if session.get('question') is not None:
+        if session.get("result") is not None:
+            session.pop("result")
         data['question'] = session['question']
         data['a'] = session['a']
         data['i'] = session['i']
@@ -398,5 +412,69 @@ def download():
 @app.route('/adminlogin')
 def adminlogin():
     return render_template('adminlogin.html')
+
+def get_season(question_id):
+    season = question_id
+    trash = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_"]
+    for item in trash:
+        season = season.replace(item, "")
     
+    return season
+    
+@app.route('/get-result')
+def get_result():
+    what_result = request.args.get('request')
+    if session.get('result') is not None:
+        session.pop("result")
+    correct = 0
+    if what_result == "correct":
+        correct = 1
+    sql = "SELECT * FROM result WHERE is_correct = %s AND username = %s"
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute(sql, (correct, session['username']))
+        result = cursor.fetchall()
+        if not result:
+            if session.get("question") is not None:
+                session.pop("question")
+            session['msg'] = "データなし"
+            return redirect(url_for('toi'))
+        data = []
+        for item in result:
+            object = {}
+            object['id'] = item[2]
+            object['season'] = get_season(item[2])
+            object['number'] = getNumber(item[2])
+            object['year'] = str(item[2][:2])
+            data.append(object)
+            
+        session['result'] = data
+    except mysql.connector.Error as err:
+        session['msg'] = str(err)
+    return redirect(url_for('toi'))
+
+@app.route('/get-question')
+def get_question():
+    id = request.args.get("id")
+    
+    if session.get("question") is not None:
+        session.pop("question")
+    if session.get("result") is not None:
+        session.pop("result")
+    if session.get("msg") is not None:
+        session.pop("msg")
+    
+    data = sq.select(id, "specific")
+    session['question'] = data['question']
+    session['a'] = data['a']
+    session['i'] = data['i']
+    session['u'] = data['u']
+    session['e'] = data['e']
+    session['answer'] = data['answer']
+    session['questionId'] = data['id']
+    print("answer: ", session['answer'])
+    
+    return redirect(url_for('toi'))
+ 
 app.run(debug=True)
