@@ -6,6 +6,7 @@ import picdown
 import random as rand
 import os
 import re
+import db_config
 
 app = Flask(__name__,
             static_folder='static',
@@ -19,12 +20,12 @@ app.config["IMAGE_FOLDER"] = IMAGE_FOLDER
 app_root = os.path.dirname(os.path.abspath(__file__))
 print("path:", app_root)
 
-db_config = {
-        'host'      : 'localhost',
-        'user'      : 'root',
-        'password'  : 'tvtittaren',
-        'database'  : 'itapp'
-    }
+# db_config = {
+#         'host'      : 'localhost',
+#         'user'      : 'root',
+#         'password'  : 'tvtittaren',
+#         'database'  : 'itapp'
+#     }
 
 @app.route('/')
 def index():
@@ -42,12 +43,7 @@ def sign_in():
     password = request.form['password']
     
     try:
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="tvtittaren",
-            database="itapp"
-        )
+        conn = mysql.connector.connect(**db_config.config)
         cursor = conn.cursor()
         
         sql = "SELECT * FROM users WHERE username = %s"
@@ -219,12 +215,6 @@ def toi():
 
 @app.route('/answer', methods=["POST"])
 def answer():
-    db_config = {
-        'host'      : 'localhost',
-        'user'      : 'root',
-        'password'  : 'tvtittaren',
-        'database'  : 'itapp'
-    }
     answer = request.form['answer']
     if answer == session['answer']:
         session['msg'] = "正解！"
@@ -235,7 +225,7 @@ def answer():
         session['qcount'] += 1
         print("正解！")
         try:
-            conn = mysql.connector.connect(**db_config)
+            conn = mysql.connector.connect(**db_config.config)
             cursor = conn.cursor()
             if int(session['qcount']) >= int(session['highscore']):
                 sql = "UPDATE experience SET xp = %s, qcount = %s, highscore = %s WHERE username = %s"
@@ -266,7 +256,7 @@ def answer():
     session['highscore'] = 0
     print("残念...")
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = mysql.connector.connect(**db_config.config)
         cursor = conn.cursor()
         sql = "UPDATE experience SET qcount = 0 WHERE username = %s"
         cursor.execute(sql, (session['username'], ))
@@ -312,12 +302,7 @@ def create_user():
         session['signMsg'] = "メールアドレスの入力エラー"
         return redirect(url_for('sign_up'))
     try:
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="tvtittaren",
-            database="itapp"
-        )
+        conn = mysql.connector.connect(**db_config.config)
         cursor = conn.cursor()
         
         # 新しいユーザー名もう存在しているかどうかを確認する
@@ -431,7 +416,7 @@ def get_result():
         correct = 1
     sql = "SELECT * FROM result WHERE is_correct = %s AND username = %s"
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = mysql.connector.connect(**db_config.config)
         cursor = conn.cursor()
         cursor.execute(sql, (correct, session['username']))
         result = cursor.fetchall()
