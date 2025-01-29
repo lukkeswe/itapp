@@ -36,42 +36,46 @@
     </nav>
         <!-- <form action="/random"><button type="submit">try</button></form> -->
     {% if data['msg'] %}<p id="msg">{{data['msg']}}</p>{% endif %}
-    {% if data['question'] %}
+    {% if data['questions'] %}
     <div class="question-container">
+        {% for question in  data['questions']%}
         <form action="/answer" method="post" class="answer-form">
-            {% if data['src'] %}
-            <img src="{{data['src']}}" alt="question image">
+            {% if question['src'] %}
+            <img src="{{question['src']}}" alt="question image">
             {% endif %}
-            <p class="question-text">{{data['question']}}</p>
-            <button type="submit" name="answer" value="ア" class="answer-btn">
+            <p class="question-text">{{question['question']}}</p>
+            <button type="submit" name="guess" value="ア" class="answer-btn">
                 <span class="answer-label">ア：　</span>
-                {% if data['a'] == "None" %}
+                {% if question['a'] == "None" %}
                 {% else %}
-                {{data['a']}}
+                {{question['a']}}
                 {% endif %}
             </button>
-            <button type="submit" name="answer" value="イ" class="answer-btn">
+            <button type="submit" name="guess" value="イ" class="answer-btn">
                 <span class="answer-label">イ：　</span>
-                {% if data['i'] == "None" %}
+                {% if question['i'] == "None" %}
                 {% else %}
-                {{data['i']}}
+                {{question['i']}}
                 {% endif %}
             </button>
-            <button type="submit" name="answer" value="ウ" class="answer-btn">
+            <button type="submit" name="guess" value="ウ" class="answer-btn">
                 <span class="answer-label">ウ：　</span>
-                {% if data['u'] == "None" %}
+                {% if question['u'] == "None" %}
                 {% else %}
-                {{data['u']}}
+                {{question['u']}}
                 {% endif %}
             </button>
-            <button type="submit" name="answer" value="エ" class="answer-btn">
+            <button type="submit" name="guess" value="エ" class="answer-btn">
                 <span class="answer-label">エ：　</span>
-                {% if data['e'] == "None" %}
+                {% if question['e'] == "None" %}
                 {% else %}
-                {{data['e']}}
+                {{question['e']}}
                 {% endif %}
             </button>
+            <input type="hidden" name="answer" value="{{question['answer']}}">
+            <input type="hidden" name="id" value="{{question['id']}}">
         </form>
+        {% endfor %}
     </div>
         {% elif data['result'] %}
     <div class="question-container">

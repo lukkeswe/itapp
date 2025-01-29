@@ -142,45 +142,42 @@ def by_year():
     if session.get('msg') is not None:
         session.pop('msg')
     year = request.form['year']
-    if int(year) < 21:
-        if int(year) == 1:
-            qYear = "01_aki"
+    
+    questions = []
+    for i in range(10):
+        question = {}
+        if int(year) < 21:
+            if int(year) == 1:
+                qYear = "01_aki"
+            else:
+                qYear = "0" + str(year) + "_menjo"
+            data = sq.select(qYear, "random")
         else:
-            qYear = "0" + str(year) + "_menjo"
-        data = sq.select(qYear, "random")
-    else:
-        qYear1 = str(year) + "_aki"
-        qYear2 = str(year) + "_haru"
-        data1 = sq.select(qYear1, "random")
-        data2 = sq.select(qYear2, "random")
-        coin = rand.randint(0, 1)
-        if coin == 1:
-            data = data1
-            qYear = qYear1
-        else:
-            data = data2
-            qYear = qYear2
+            qYear1 = str(year) + "_aki"
+            qYear2 = str(year) + "_haru"
+            data1 = sq.select(qYear1, "random")
+            data2 = sq.select(qYear2, "random")
+            coin = rand.randint(0, 1)
+            if coin == 1:
+                data = data1
+                qYear = qYear1
+            else:
+                data = data2
+                qYear = qYear2
+                
+        question_number = getNumber(data["id"])
+        if int(question_number) < 10:
+            question_number = "0" + str(question_number)
             
-    question_number = getNumber(data["id"])
-    if int(question_number) < 10:
-        question_number = "0" + str(question_number)
-    
-    if getImage(qYear, question_number):
-        session["src"] = "img/" + qYear + "/" + question_number + ".png"
-        print("src:", session["src"])
-    else:
-        if session.get('src'):
-            session.pop('src')
+        question = data
         
-    session['question'] = data['question']
-    session['a'] = data['a']
-    session['i'] = data['i']
-    session['u'] = data['u']
-    session['e'] = data['e']
-    session['answer'] = data['answer']
-    session['questionId'] = data['id']
-    print("answer: ", session['answer'])
-    
+        if getImage(qYear, question_number):
+            question["src"] = "img/" + qYear + "/" + question_number + ".png"
+            print("src:", question["src"])
+        
+        questions.append(question)
+        print(f"answer{i + 1}: ", question['answer'])
+    session['questions'] = questions
     session['msg'] = ""
     
     return redirect(url_for('toi'))
@@ -197,21 +194,15 @@ def toi():
         data['highscore'] = session['highscore']
     
     if session.get('result') is not None:
-        if session.get('question') is not None:
+        if session.get('questions') is not None:
             session.pop('question')
         data['result'] = session['result']
         print(data['result'])
     
-    if session.get('question') is not None:
+    if session.get('questions') is not None:
         if session.get("result") is not None:
             session.pop("result")
-        data['question'] = session['question']
-        data['a'] = session['a']
-        data['i'] = session['i']
-        data['u'] = session['u']
-        data['e'] = session['e']
-        if session.get("src") is not None:
-            data['src'] = session['src']
+        data['questions'] = session['questions']
         
     if session.get('msg') is None:
         session['msg'] = ""
@@ -222,8 +213,10 @@ def toi():
 def answer():
     if session.get('msg') is not None:
         session.pop('msg')
+    guess = request.form['guess']
     answer = request.form['answer']
-    if answer == session['answer']:
+    id = request.form['id']
+    if guess == answer:
         session['msg'] = "正解！"
         if session['qcount'] == 0:
             session['xp'] += 1
@@ -247,11 +240,11 @@ def answer():
             sql = "INSERT INTO result (username, question_id, is_correct) VALUES (%s, %s, 1)"
             if result:
                 for item in result:
-                    if item[2] == session['questionId']:
+                    if item[2] == id:
                         sql = "UPDATE result SET is_correct = 1 WHERE username = %s AND question_id = %s"
                         break
                     sql = "INSERT INTO result (username, question_id, is_correct) VALUES (%s, %s, 1)"
-            cursor.execute(sql, (session['username'], session['questionId']))
+            cursor.execute(sql, (session['username'], id))
             conn.commit()
             cursor.close()
             conn.close()
@@ -274,11 +267,11 @@ def answer():
         sql = "INSERT INTO result (username, question_id, is_correct) VALUES (%s, %s, 0)"
         if result:
             for item in result:
-                if item[2] == session['questionId']:
+                if item[2] == id:
                     sql = "UPDATE result SET is_correct = 0 WHERE username = %s AND question_id = %s"
                     break
                 
-        cursor.execute(sql, (session['username'], session['questionId']))
+        cursor.execute(sql, (session['username'], id))
         conn.commit()
         cursor.close()
         conn.close()
