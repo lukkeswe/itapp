@@ -35,7 +35,7 @@ def sign_in():
     username = request.form['name']
     password = request.form['password']
     
-    if session['msg'] is not None:
+    if session.get('msg') is not None:
         session.pop('msg')
     
     try:
@@ -133,7 +133,7 @@ def getNumber(question_id):
 
 @app.route('/by-year', methods=['POST'])
 def by_year():
-    if session['msg'] is not None:
+    if session.get('msg') is not None:
         session.pop('msg')
     year = request.form['year']
     if int(year) < 21:
@@ -214,7 +214,7 @@ def toi():
 
 @app.route('/answer', methods=["POST"])
 def answer():
-    if session['msg'] is not None:
+    if session.get('msg') is not None:
         session.pop('msg')
     answer = request.form['answer']
     if answer == session['answer']:
@@ -283,13 +283,13 @@ def answer():
 
 @app.route('/sign-up')
 def sign_up():
-    if session['signMsg'] is None:
+    if session.get('signMsg') is None:
         session['signMsg']
     return render_template("signup.html", msg=session['signMsg'])
 
 @app.route('/create-user', methods=['POST'])
 def create_user():
-    if session['signMsg'] is not None:
+    if session.get('signMsg') is not None:
         session.pop('signMsg')
     newUserName = request.form['name']
     newEmail    = request.form['email']
@@ -412,7 +412,7 @@ def get_season(question_id):
     
 @app.route('/get-result')
 def get_result():
-    if session['msg'] is not None:
+    if session.get('msg') is not None:
         session.pop('msg')
     what_result = request.args.get('request')
     if session.get('result') is not None:
