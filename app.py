@@ -37,6 +37,8 @@ def sign_in():
     
     if session.get('msg') is not None:
         session.pop('msg')
+    if session.get('loginMsg') is not None:
+        session.pop('loginMsg')
     
     try:
         conn = mysql.connector.connect(**db_config.config)
