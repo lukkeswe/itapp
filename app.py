@@ -35,6 +35,9 @@ def sign_in():
     username = request.form['name']
     password = request.form['password']
     
+    if session['msg'] is not None:
+        session.pop('msg')
+    
     try:
         conn = mysql.connector.connect(**db_config.config)
         cursor = conn.cursor()
@@ -100,6 +103,9 @@ def sign_in():
 
 @app.route('/random')
 def random():
+    if session['msg'] is not None:
+        session.pop('msg')
+    
     data = sq.select(None, 'random')
     
     session['question'] = data['question']
@@ -109,8 +115,6 @@ def random():
     session['e'] = data['e']
     session['answer'] = data['answer']
     print("answer: ", session['answer'])
-    
-    session['msg'] = ""
     
     return redirect(url_for('toi'))
 
@@ -129,6 +133,8 @@ def getNumber(question_id):
 
 @app.route('/by-year', methods=['POST'])
 def by_year():
+    if session['msg'] is not None:
+        session.pop('msg')
     year = request.form['year']
     if int(year) < 21:
         if int(year) == 1:
@@ -208,6 +214,8 @@ def toi():
 
 @app.route('/answer', methods=["POST"])
 def answer():
+    if session['msg'] is not None:
+        session.pop('msg')
     answer = request.form['answer']
     if answer == session['answer']:
         session['msg'] = "正解！"
@@ -275,11 +283,14 @@ def answer():
 
 @app.route('/sign-up')
 def sign_up():
-    session['signMsg'] = ""
+    if session['signMsg'] is None:
+        session['signMsg']
     return render_template("signup.html", msg=session['signMsg'])
 
 @app.route('/create-user', methods=['POST'])
 def create_user():
+    if session['signMsg'] is not None:
+        session.pop('signMsg')
     newUserName = request.form['name']
     newEmail    = request.form['email']
     newPassword = request.form['password']
@@ -401,6 +412,8 @@ def get_season(question_id):
     
 @app.route('/get-result')
 def get_result():
+    if session['msg'] is not None:
+        session.pop('msg')
     what_result = request.args.get('request')
     if session.get('result') is not None:
         session.pop("result")
