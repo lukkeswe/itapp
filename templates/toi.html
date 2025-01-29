@@ -15,9 +15,9 @@
             <span class="username">
                 {% if data['username'] %}
                 {{data['username']}}
-                 HS: 
+                 HS:
                 {{data['highscore']}}
-                 XP: 
+                 XP:
                 {{data['xp']}}
                 {% else %}
                 User
@@ -25,16 +25,15 @@
             </span>
         </div>
     </header>
-    
+
     <nav>
         <ul>
             <button><li><a href="/get-result?request=correct">正解した問題一覧</a></li></button>
             <button><li><a href="/get-result?request=incorrect">不正解一覧</a></li></button>
             <button><li><a href="/">公式サイトはこちら</a></li></button>
-            <form action="/login" method="post"><button type="submit"><li>初めての方へ</li></button></form>
         </ul>
     </nav>
-    
+
     <main>
         <div class="selection-container">
             <h2>選択</h2>
@@ -53,23 +52,27 @@
             </form>
         </div>
     </main>
-    <div style="color: #000; width: 500px; margin: 0 auto;">
+    <div class="question-container">
         <!-- <form action="/random"><button type="submit">try</button></form> -->
         {% if data['msg'] %}<p>{{data['msg']}}</p>{% endif %}
         {% if data['question'] %}
-        <form action="/answer" method="post">
+        <form action="/answer" method="post" class="answer-form">
             {% if data['src'] %}
             <img src="{{data['src']}}" alt="question image">
             {% endif %}
-            <p>{{data['question']}}</p>
-            <input type="submit" name="answer" value="ア"><br>
-            <p>{{data['a']}}</p>
-            <input type="submit" name="answer" value="イ"><br>
-            <p>{{data['i']}}</p>
-            <input type="submit" name="answer" value="ウ"><br>
-            <p>{{data['u']}}</p>
-            <input type="submit" name="answer" value="エ"><br>
-            <p>{{data['e']}}</p>
+            <p class="question-text">{{data['question']}}</p>
+            <button type="submit" name="answer" value="ア" class="answer-btn">
+                <span class="answer-label">ア：　</span>{{data['a']}}
+            </button>
+            <button type="submit" name="answer" value="イ" class="answer-btn">
+                <span class="answer-label">イ：　</span>{{data['i']}}
+            </button>
+            <button type="submit" name="answer" value="ウ" class="answer-btn">
+                <span class="answer-label">ウ：　</span>{{data['u']}}
+            </button>
+            <button type="submit" name="answer" value="エ" class="answer-btn">
+                <span class="answer-label">エ：　</span>{{data['e']}}
+            </button>
         </form>
         {% elif data['result'] %}
         <table>
