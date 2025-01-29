@@ -30,10 +30,69 @@
         <ul>
             <button><li><a href="/get-result?request=correct">正解した問題一覧</a></li></button>
             <button><li><a href="/get-result?request=incorrect">不正解一覧</a></li></button>
+            <button><li><a href="/view-selection">年度選択</a></li></button>
             <button><li><a href="/">公式サイトはこちら</a></li></button>
         </ul>
     </nav>
-
+        <!-- <form action="/random"><button type="submit">try</button></form> -->
+    {% if data['msg'] %}<p id="msg">{{data['msg']}}</p>{% endif %}
+    {% if data['question'] %}
+    <div class="question-container">
+        <form action="/answer" method="post" class="answer-form">
+            {% if data['src'] %}
+            <img src="{{data['src']}}" alt="question image">
+            {% endif %}
+            <p class="question-text">{{data['question']}}</p>
+            <button type="submit" name="answer" value="ア" class="answer-btn">
+                <span class="answer-label">ア：　</span>
+                {% if data['a'] == "None" %}
+                {% else %}
+                {{data['a']}}
+                {% endif %}
+            </button>
+            <button type="submit" name="answer" value="イ" class="answer-btn">
+                <span class="answer-label">イ：　</span>
+                {% if data['i'] == "None" %}
+                {% else %}
+                {{data['i']}}
+                {% endif %}
+            </button>
+            <button type="submit" name="answer" value="ウ" class="answer-btn">
+                <span class="answer-label">ウ：　</span>
+                {% if data['u'] == "None" %}
+                {% else %}
+                {{data['u']}}
+                {% endif %}
+            </button>
+            <button type="submit" name="answer" value="エ" class="answer-btn">
+                <span class="answer-label">エ：　</span>
+                {% if data['e'] == "None" %}
+                {% else %}
+                {{data['e']}}
+                {% endif %}
+            </button>
+        </form>
+    </div>
+        {% elif data['result'] %}
+    <div class="question-container">
+        <table>
+        <tr>
+            <td>年度</td>
+            <td>季節</td>
+            <td>番号</td>
+            <td>問題リンク</td>
+        </tr>
+        {% for item in data['result'] %}
+        <tr>
+            <td>{{item.year}}</td>
+            <td>{{item.season}}</td>
+            <td>{{item.number}}</td>
+            <td><a href="/get-question?id={{item.id}}">⇒</a></td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+    {% else %}
     <main>
         <div class="selection-container">
             <h2>選択</h2>
@@ -52,47 +111,7 @@
             </form>
         </div>
     </main>
-    <div class="question-container">
-        <!-- <form action="/random"><button type="submit">try</button></form> -->
-        {% if data['msg'] %}<p>{{data['msg']}}</p>{% endif %}
-        {% if data['question'] %}
-        <form action="/answer" method="post" class="answer-form">
-            {% if data['src'] %}
-            <img src="{{data['src']}}" alt="question image">
-            {% endif %}
-            <p class="question-text">{{data['question']}}</p>
-            <button type="submit" name="answer" value="ア" class="answer-btn">
-                <span class="answer-label">ア：　</span>{{data['a']}}
-            </button>
-            <button type="submit" name="answer" value="イ" class="answer-btn">
-                <span class="answer-label">イ：　</span>{{data['i']}}
-            </button>
-            <button type="submit" name="answer" value="ウ" class="answer-btn">
-                <span class="answer-label">ウ：　</span>{{data['u']}}
-            </button>
-            <button type="submit" name="answer" value="エ" class="answer-btn">
-                <span class="answer-label">エ：　</span>{{data['e']}}
-            </button>
-        </form>
-        {% elif data['result'] %}
-        <table>
-        <tr>
-            <td>年度</td>
-            <td>季節</td>
-            <td>番号</td>
-            <td>問題リンク</td>
-        </tr>
-        {% for item in data['result'] %}
-        <tr>
-            <td>{{item.year}}</td>
-            <td>{{item.season}}</td>
-            <td>{{item.number}}</td>
-            <td><a href="/get-question?id={{item.id}}">⇒</a></td>
-        </tr>
-        {% endfor %}
-        </table>
-        {% endif %}
-    </div>
+    {% endif %}
 </body>
 <script>
 const colors = [

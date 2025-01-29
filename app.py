@@ -28,6 +28,10 @@ def index():
 def login():
     if session.get('loginMsg') is None:
         session['loginMsg'] = ""
+    if session.get('username') is not None:
+        session.pop('username')
+    if session.get('question') is not None:
+        session.pop('question')
     return render_template('login.html', msg=session['loginMsg'])
 
 @app.route('/sign-in', methods=['POST'])
@@ -287,6 +291,10 @@ def answer():
 def sign_up():
     if session.get('signMsg') is None:
         session['signMsg']
+    if session.get('username') is not None:
+        session.pop('username')
+    if session.get('question') is not None:
+        session.pop('question')
     return render_template("signup.html", msg=session['signMsg'])
 
 @app.route('/create-user', methods=['POST'])
@@ -419,6 +427,8 @@ def get_result():
     what_result = request.args.get('request')
     if session.get('result') is not None:
         session.pop("result")
+    if session.get('question') is not None:
+        session.pop('question')
     correct = 0
     if what_result == "correct":
         correct = 1
@@ -469,5 +479,12 @@ def get_question():
     print("answer: ", session['answer'])
     
     return redirect(url_for('toi'))
- 
+
+@app.route('/view-selection')
+def view_selection():
+    if session.get('question') is not None:
+        session.pop('question')
+    if session.get('result') is not None:
+        session.pop('result')
+    return redirect(url_for('toi'))
 app.run(debug=True)
