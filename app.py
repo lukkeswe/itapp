@@ -153,17 +153,21 @@ def by_year():
                 qYear = "0" + str(year) + "_menjo"
             data = sq.select(qYear, "random")
         else:
-            qYear1 = str(year) + "_aki"
-            qYear2 = str(year) + "_haru"
-            data1 = sq.select(qYear1, "random")
-            data2 = sq.select(qYear2, "random")
-            coin = rand.randint(0, 1)
-            if coin == 1:
-                data = data1
-                qYear = qYear1
+            if int(year) == 31:
+                qYear = str(year) + "_haru"
+                data = sq.select(qYear, "random")
             else:
-                data = data2
-                qYear = qYear2
+                qYear1 = str(year) + "_aki"
+                qYear2 = str(year) + "_haru"
+                data1 = sq.select(qYear1, "random")
+                data2 = sq.select(qYear2, "random")
+                coin = rand.randint(0, 1)
+                if coin == 1:
+                    data = data1
+                    qYear = qYear1
+                else:
+                    data = data2
+                    qYear = qYear2
                 
         question_number = getNumber(data["id"])
         if int(question_number) < 10:
