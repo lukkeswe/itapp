@@ -475,8 +475,8 @@ def get_question():
 
 @app.route('/view-selection')
 def view_selection():
-    if session.get('question') is not None:
-        session.pop('question')
+    if session.get('questions') is not None:
+        session.pop('questions')
     if session.get('result') is not None:
         session.pop('result')
     return redirect(url_for('toi'))
