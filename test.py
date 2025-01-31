@@ -32,6 +32,9 @@ years = [
 # for year in years:
 #     it.scrape(year)
 
+# for year in years:
+#     for i in range(1, 81):
+#         picdown.picture(f"https://www.fe-siken.com/kakomon/{year}/", i, year)
+
 for year in years:
-    for i in range(1, 81):
-        picdown.picture(f"https://www.fe-siken.com/kakomon/{year}/", i, year)
+    it.add_title(year)
