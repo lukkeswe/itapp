@@ -137,6 +137,16 @@ def getNumber(question_id):
     cleaned_id = re.sub(r"[^0-9]", "", last_two)
     return cleaned_id
 
+def popQuestion():
+    if session.get('questions') is not None:
+        session.pop('questions')
+def popResult():
+    if session.get('result') is not None:
+        session.pop('result')
+def popSearchResult():
+    if session.get('searchResult') is not None:
+        session.pop('searchResult')
+
 @app.route('/by-year', methods=['POST'])
 def by_year():
     if session.get('msg') is not None:
@@ -210,6 +220,9 @@ def toi():
         
     if session.get('msg') is None:
         session['msg'] = ""
+    if session.get('viewFilter'):
+        data['viewFilter'] = True
+    
     data['msg'] = session['msg']
     return render_template("toi.html", data=data)
 
@@ -458,30 +471,65 @@ def get_result():
 def get_question():
     id = request.args.get("id")
     
-    if session.get("question") is not None:
-        session.pop("question")
-    if session.get("result") is not None:
-        session.pop("result")
+    popQuestion()
+    popResult()
+    popSearchResult()
     if session.get("msg") is not None:
         session.pop("msg")
     
     data = sq.select(id, "specific")
-    session['question'] = data['question']
-    session['a'] = data['a']
-    session['i'] = data['i']
-    session['u'] = data['u']
-    session['e'] = data['e']
-    session['answer'] = data['answer']
-    session['questionId'] = data['id']
-    print("answer: ", session['answer'])
+    question = {}
+    question['question'] = data['question']
+    question['a'] = data['a']
+    question['i'] = data['i']
+    question['u'] = data['u']
+    question['e'] = data['e']
+    question['answer'] = data['answer']
+    question['questionId'] = data['id']
+    print("answer: ", question['answer'])
+    array = []
+    array.append(question)
+    session['questions'] = array
     
     return redirect(url_for('toi'))
 
 @app.route('/view-selection')
 def view_selection():
-    if session.get('questions') is not None:
-        session.pop('questions')
-    if session.get('result') is not None:
-        session.pop('result')
+    popQuestion()
+    popResult()
     return redirect(url_for('toi'))
+
+@app.route('/view-filter')
+def view_filter():
+    popQuestion()
+    popResult()
+    session['viewFilter'] = True
+    return redirect(url_for('toi'))
+
+@app.route('/filter', methods=['POST'])
+def filter():
+    session.pop('viewFilter')
+    keyword = request.form['keyword']
+    try:
+        conn = mysql.connector.connect(**db_config.config)
+        cursor = conn.cursor()
+        sql = "SELECT * FROM questions WHERE title LIKE %s"
+        search_term = f"%{keyword}%"
+        cursor.execute(sql, (search_term,))
+        result = cursor.fetchall()
+        data = []
+        for item in result:
+            question = {}
+            question['question'] = item[1]
+            question['answer'] = item[2]
+            question['id'] = item[3]
+            question['title'] = item[4]
+            data.append(question)
+        session['searchResult'] = data
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        session['msg'] = str(err)
+    return redirect(url_for('toi'))
+
 app.run(debug=True)

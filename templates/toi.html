@@ -31,6 +31,7 @@
             <button><li><a href="/get-result?request=correct">正解した問題一覧</a></li></button>
             <button><li><a href="/get-result?request=incorrect">不正解一覧</a></li></button>
             <button><li><a href="/view-selection">年度選択</a></li></button>
+            <button><li><a href="/view-filter">問題検索</a></li></button>
             <button><li><a href="/">公式サイトはこちら</a></li></button>
         </ul>
     </nav>
@@ -77,7 +78,7 @@
         </form>
         {% endfor %}
     </div>
-        {% elif data['result'] %}
+    {% elif data['result'] %}
     <div class="question-container">
         <table>
         <tr>
@@ -95,6 +96,26 @@
         </tr>
         {% endfor %}
         </table>
+    </div>
+    {% elif data['viewFilter'] %}
+    <div class="question-container">
+        <form action="/filter" method="post">
+            <label for="keyword">希望：</label>
+            <input type="text" name="keyword">
+            <input type="submit" value="検索">
+        </form>
+    </div>
+    {% elif data['searchResult'] %}
+    <div class="question-container">
+        <table>
+            <tr><td>タイトル</td><td>ID</td></tr>
+        {% for result in  data['searchResult']%}
+        <tr>
+            <td>{{result['title']}}</td>
+            <td><a href="/get-question?id={{result['id']}}"></a>{{result['id']}}⇒</td>
+        </tr>
+        {% endfor %}
+    </table>
     </div>
     {% else %}
     <main>
