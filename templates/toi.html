@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>選択ページ</title>
+    <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -99,10 +100,9 @@
     </div>
     {% elif data['viewFilter'] %}
     <div class="question-container">
-        <form action="/filter" method="post">
-            <label for="keyword">希望：</label>
-            <input type="text" name="keyword">
-            <input type="submit" value="検索">
+        <form action="/filter" method="post" class="search-form">
+            <input type="text" name="keyword" class="text-input">
+            <button><input type="submit" value="検索"></button>
         </form>
     </div>
     {% elif data['searchResult'] %}

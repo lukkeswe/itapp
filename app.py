@@ -137,6 +137,9 @@ def getNumber(question_id):
     cleaned_id = re.sub(r"[^0-9]", "", last_two)
     return cleaned_id
 
+def popMessage():
+    if session.get('msg') is not None:
+        session.pop('msg')
 def popQuestion():
     if session.get('questions') is not None:
         session.pop('questions')
@@ -146,6 +149,15 @@ def popResult():
 def popSearchResult():
     if session.get('searchResult') is not None:
         session.pop('searchResult')
+def popFilter():
+    if session.get('viewFilter') is not None:
+        session.pop('viewFilter')
+def popEverything():
+    popMessage()
+    popQuestion()
+    popResult()
+    popSearchResult()
+    popFilter()
 
 @app.route('/by-year', methods=['POST'])
 def by_year():
@@ -231,8 +243,7 @@ def toi():
 
 @app.route('/answer', methods=["POST"])
 def answer():
-    if session.get('msg') is not None:
-        session.pop('msg')
+    popMessage()
     guess = request.form['guess']
     answer = request.form['answer']
     id = request.form['id']
@@ -435,13 +446,9 @@ def get_season(question_id):
     
 @app.route('/get-result')
 def get_result():
-    if session.get('msg') is not None:
-        session.pop('msg')
+    popEverything()
     what_result = request.args.get('request')
-    if session.get('result') is not None:
-        session.pop("result")
-    if session.get('question') is not None:
-        session.pop('question')
+    
     correct = 0
     if what_result == "correct":
         correct = 1
@@ -474,9 +481,8 @@ def get_result():
 def get_question():
     id = request.args.get("id")
     
-    popQuestion()
-    popResult()
-    popSearchResult()
+    popEverything()
+    
     if session.get("msg") is not None:
         session.pop("msg")
     
@@ -498,14 +504,12 @@ def get_question():
 
 @app.route('/view-selection')
 def view_selection():
-    popQuestion()
-    popResult()
+    popEverything()
     return redirect(url_for('toi'))
 
 @app.route('/view-filter')
 def view_filter():
-    popQuestion()
-    popResult()
+    popEverything()
     session['viewFilter'] = True
     return redirect(url_for('toi'))
 
