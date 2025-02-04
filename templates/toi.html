@@ -112,7 +112,7 @@
         {% for result in  data['searchResult']%}
         <tr>
             <td>{{result['title']}}</td>
-            <td><a href="/get-question?id={{result['id']}}"></a>{{result['id']}}⇒</td>
+            <td><a href="/get-question?id={{result['id']}}">{{result['id']}}⇒</a></td>
         </tr>
         {% endfor %}
     </table>

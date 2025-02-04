@@ -222,6 +222,9 @@ def toi():
         session['msg'] = ""
     if session.get('viewFilter'):
         data['viewFilter'] = True
+        
+    if session.get('searchResult') is not None:
+        data['searchResult'] = session['searchResult']
     
     data['msg'] = session['msg']
     return render_template("toi.html", data=data)
@@ -520,8 +523,8 @@ def filter():
         data = []
         for item in result:
             question = {}
-            question['question'] = item[1]
-            question['answer'] = item[2]
+            #question['question'] = item[1]
+            #question['answer'] = item[2]
             question['id'] = item[3]
             question['title'] = item[4]
             data.append(question)
