@@ -65,3 +65,35 @@ def get_title(url):
     else:
         print("Table not found.")
         return []
+
+def get_category(url):
+    # Send a GET request
+    response = requests.get(url)
+
+    # Parse the HTML using 'lxml' (better at handling broken HTML)
+    soup = BeautifulSoup(response.text, "lxml")
+
+    # Find the table with class "qtable"
+    table = soup.find("table", class_="qtable")
+
+    # Extract all <tr> elements while filtering out headers
+    if table:
+        rows = table.find_all("tr")
+        data = []
+        for row in rows:
+            # Skip rows that contain <th> (header rows) or class "h"
+            if row.find("th") or "h" in row.get("class", []):
+                continue
+
+            # Extract <td> elements (without recursive=False)
+            tds = row.find_all("td")
+
+            # Ensure there are at least 2 <td> elements before extracting the second one
+            if len(tds) >= 2:
+                print(tds[2].get_text(strip=True))  # Print only the second <td>
+                data.append(tds[2].get_text(strip=True))
+        return data
+
+    else:
+        print("Table not found.")
+        return []

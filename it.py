@@ -1,5 +1,6 @@
 import scraping
 import mysql.connector
+import db_config
 
 def scrape(year):
     data = []
@@ -13,12 +14,7 @@ def scrape(year):
 
     # print("data: ", data)
 
-    conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="tvtittaren",
-        database="itapp"
-    )
+    conn = mysql.connector.connect(**db_config.config)
 
     cur = conn.cursor()
 
@@ -74,16 +70,30 @@ def add_title(year):
     data = scraping.get_title("https://www.fe-siken.com/kakomon/" + year + "/")
     
     try:
-        conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="tvtittaren",
-        database="itapp"
-        )
+        conn = mysql.connector.connect(**db_config.config)
 
         cur = conn.cursor()
         for i, title in enumerate(data):
             sql = "UPDATE questions SET title = %s WHERE question_id = %s"
+            cur.execute(sql, (title, str(year + str(i + 1))))
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+            
+        
+    except mysql.connector.Error as err:
+        print(err)
+
+def add_category(year):
+    data = scraping.get_title("https://www.fe-siken.com/kakomon/" + year + "/")
+    
+    try:
+        conn = mysql.connector.connect(**db_config.config)
+
+        cur = conn.cursor()
+        for i, title in enumerate(data):
+            sql = "UPDATE questions SET category = %s WHERE question_id = %s"
             cur.execute(sql, (title, str(year + str(i + 1))))
         
         conn.commit()

@@ -7,5 +7,5 @@ config = {
     'host'      : 'localhost',
     'user'      : 'root',
     'password'  : 'tvtittaren',
-    'database'  : 'itapp'
+    'database'  : 'itdb'
 }
