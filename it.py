@@ -86,7 +86,7 @@ def add_title(year):
         print(err)
 
 def add_category(year):
-    data = scraping.get_title("https://www.fe-siken.com/kakomon/" + year + "/")
+    data = scraping.get_category("https://www.fe-siken.com/kakomon/" + year + "/")
     
     try:
         conn = mysql.connector.connect(**db_config.config)

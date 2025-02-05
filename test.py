@@ -45,17 +45,17 @@ years = [
     "13_haru"
 ]
 # Scrape the questions and options
-for year in years:
-    it.scrape(year)
+# for year in years:
+#     it.scrape(year)
 
 # Download pictures
-for year in years:
-    for i in range(1, 81):
-        picdown.picture(f"https://www.fe-siken.com/kakomon/{year}/", i, year)
+# for year in years:
+#     for i in range(1, 81):
+#         picdown.picture(f"https://www.fe-siken.com/kakomon/{year}/", i, year)
 
 # Add title to the questions
-for year in years:
-    it.add_title(year)
+# for year in years:
+#     it.add_title(year)
 
 for year in years:
     it.add_category(year)
