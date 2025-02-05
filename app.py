@@ -191,15 +191,15 @@ def by_year():
                     data = data2
                     qYear = qYear2
                 
-        question_number = getNumber(data["id"])
-        if int(question_number) < 10:
-            question_number = "0" + str(question_number)
+        # question_number = getNumber(data["id"])
+        # if int(question_number) < 10:
+        #     question_number = "0" + str(question_number)
             
         question = data
         
-        if getImage(qYear, question_number):
-            question["src"] = "img/" + qYear + "/" + question_number + ".png"
-            print("src:", question["src"])
+        # if getImage(qYear, question_number):
+        #     question["src"] = "img/" + qYear + "/" + question_number + ".png"
+        #     print("src:", question["src"])
         
         questions.append(question)
         print(f"answer{i + 1}: ", question['answer'])
@@ -314,7 +314,7 @@ def answer():
 @app.route('/sign-up')
 def sign_up():
     if session.get('signMsg') is None:
-        session['signMsg']
+        session['signMsg'] = ""
     if session.get('username') is not None:
         session.pop('username')
     if session.get('question') is not None:
@@ -485,16 +485,11 @@ def get_question():
     
     if session.get("msg") is not None:
         session.pop("msg")
-    
+        
     data = sq.select(id, "specific")
     question = {}
-    question['question'] = data['question']
-    question['a'] = data['a']
-    question['i'] = data['i']
-    question['u'] = data['u']
-    question['e'] = data['e']
-    question['answer'] = data['answer']
-    question['questionId'] = data['id']
+    question = data
+    
     print("answer: ", question['answer'])
     array = []
     array.append(question)

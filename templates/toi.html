@@ -42,8 +42,8 @@
     <div class="question-container">
         {% for question in  data['questions']%}
         <form action="/answer" method="post" class="answer-form">
-            {% if question['src'] %}
-            <img src="{{question['src']}}" alt="question image">
+            {% if question['q_image'] %}
+            <img src="{{question['q_image']}}" alt="question image">
             {% endif %}
             <p class="question-text">{{question['question']}}</p>
             <button type="submit" name="guess" value="ア" class="answer-btn">
@@ -52,12 +52,18 @@
                 {% else %}
                 {{question['a']}}
                 {% endif %}
+                {% if question['a_image'] %}
+                <img src="{{question['a_image']}}" alt="image a">
+                {% endif %}
             </button>
             <button type="submit" name="guess" value="イ" class="answer-btn">
                 <span class="answer-label">イ：　</span>
                 {% if question['i'] == "None" %}
                 {% else %}
                 {{question['i']}}
+                {% endif %}
+                {% if question['i_image'] %}
+                <img src="{{question['i_image']}}" alt="image i">
                 {% endif %}
             </button>
             <button type="submit" name="guess" value="ウ" class="answer-btn">
@@ -66,12 +72,18 @@
                 {% else %}
                 {{question['u']}}
                 {% endif %}
+                {% if question['u_image'] %}
+                <img src="{{question['u_image']}}" alt="image u">
+                {% endif %}
             </button>
             <button type="submit" name="guess" value="エ" class="answer-btn">
                 <span class="answer-label">エ：　</span>
                 {% if question['e'] == "None" %}
                 {% else %}
                 {{question['e']}}
+                {% endif %}
+                {% if question['e_image'] %}
+                <img src="{{question['e_image']}}" alt="image e">
                 {% endif %}
             </button>
             <input type="hidden" name="answer" value="{{question['answer']}}">
