@@ -5,10 +5,12 @@ import re
 
 rep_list = [
     "</span>",
+    '<span>',
     '<span id="select_a">',
     '<span id="select_i">',
     '<span id="select_u">',
-    '<span id="select_e">'
+    '<span id="select_e">',
+    '<span class="frac">'
 ]
 
 db_config = {
