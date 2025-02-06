@@ -15,7 +15,7 @@ db_config = {
     'host'      : 'localhost',
     'user'      : 'root',
     'password'  : 'tvtittaren',
-    'database'  : 'itapp'
+    'database'  : 'itdb'
 }
 
 IMAGE_FOLDER = os.path.join("static", "img")
