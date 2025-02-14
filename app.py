@@ -226,9 +226,10 @@ def toi():
         print(data['result'])
     
     if session.get('questions') is not None:
-        if session.get("result") is not None:
-            session.pop("result")
+        popResult()
         data['questions'] = session['questions']
+        if session.get('previousQuestion') is not None:
+            data['previousQuestion'] = session['previousQuestion']
         
     if session.get('msg') is None:
         session['msg'] = ""
@@ -247,6 +248,7 @@ def answer():
     guess = request.form['guess']
     answer = request.form['answer']
     id = request.form['id']
+    session['previousQuestion'] = id
     if guess == answer:
         session['msg'] = "正解！"
         if session['qcount'] == 0:

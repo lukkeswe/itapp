@@ -38,6 +38,7 @@
     </nav>
         <!-- <form action="/random"><button type="submit">try</button></form> -->
     {% if data['msg'] %}<p id="msg">{{data['msg']}}</p>{% endif %}
+    {% if data['previousQuestion'] %}<p id="previousQuestion" style="display: none;">{{data['previousQuestion']}}</p>{% endif %}
     {% if data['questions'] %}
     <div class="question-container">
         {% for question in  data['questions']%}
@@ -45,7 +46,7 @@
             {% if question['q_image'] %}
             <img src="{{question['q_image']}}" alt="question image">
             {% endif %}
-            <p class="question-text">{{question['question']}}</p>
+            <p class="question-text" id="{{question['id']}}">{{question['question']}}</p>
             <button type="submit" name="guess" value="ア" class="answer-btn">
                 <span class="answer-label">ア：　</span>
                 {% if question['a'] == "None" %}
@@ -151,6 +152,16 @@
     {% endif %}
 </body>
 <script>
+window.onload = function() {
+    const previousQuestion = document.getElementById("previousQuestion");
+    if(previousQuestion){
+        let id = previousQuestion.textContent;
+        const targetElement = document.getElementById(id);
+        if(targetElement){
+            targetElement.scrollIntoView({behavior:"instant", block:"start"});
+        }
+    }
+}
 const colors = [
 ["black", "white", "red", "green", "yellow"],
 ["brown", "pink", "orange", "purple", "silver"]
